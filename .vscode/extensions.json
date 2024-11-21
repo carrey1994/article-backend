@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "prisma.prisma",                // Prisma support
+    "esbenp.prettier-vscode",       // Prettier formatting
+    "dbaeumer.vscode-eslint",       // ESLint support
+    "mikestead.dotenv",             // .env file support
+    "christian-kohler.path-intellisense", // Path autocompletion
+    "christian-kohler.npm-intellisense",  // NPM module autocompletion
+    "streetsidesoftware.code-spell-checker", // Spell checking
+    "eamodio.gitlens",             // Git integration
+    "github.vscode-github-actions", // GitHub Actions support
+    "ms-azuretools.vscode-docker",  // Docker support
+    "yoavbls.pretty-ts-errors",     // Better TypeScript errors
+    "formulahendry.auto-rename-tag", // Auto rename paired HTML/XML tags
+    "formulahendry.auto-close-tag",  // Auto close HTML/XML tags
+    "aaron-bond.better-comments",    // Better comment highlighting
+    "pkief.material-icon-theme"      // Better file icons
+  ],
+  "unwantedRecommendations": []
+}
