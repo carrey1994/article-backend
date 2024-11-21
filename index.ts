@@ -11,12 +11,15 @@ import { healthRoutes } from './src/routes/health';
 // Import middleware
 import { errorHandler } from './src/middleware/errorHandler';
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 const app = new Elysia()
   .use(cors({
-    origin: process.env.FRONTEND_URL || '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
+    origin: isDev ? '*' : ['http://localhost:3001'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: false,
+    preflight: true
   }))
   .use(swagger({
     documentation: {
@@ -50,5 +53,6 @@ const app = new Elysia()
 console.log(
   `🦊 Server is running at ${app.server?.hostname}:${app.server?.port}
 📝 REST API documentation available at /swagger
-💓 Health check available at /health`
+💓 Health check available at /health
+🔒 CORS enabled for ${isDev ? 'all origins (development mode)' : 'http://localhost:3001'}`
 );
