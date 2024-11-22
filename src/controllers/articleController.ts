@@ -1,4 +1,5 @@
 import { prisma } from '../utils/db';
+// Remove marked import since we're not using it anymore
 // import { marked } from 'marked';
 
 class NotFoundError extends Error {
@@ -60,7 +61,7 @@ export const articleController = {
 
       const article = await prisma.article.findUnique({
         where: { 
-          id // Prisma will handle the type conversion since id is now a number
+          id
         },
         include: {
           tags: true,
@@ -76,8 +77,17 @@ export const articleController = {
         throw new Error('Article not found');
       }
 
-      // Return the article directly without converting markdown to HTML
-      return article;
+      // Clean up content by removing extra whitespace and indentation
+      const cleanContent = article.content
+        .split('\n')
+        .map(line => line.trim())
+        .join('\n')
+        .trim();
+
+      return {
+        ...article,
+        content: cleanContent
+      };
       
     } catch (error) {
       if (error instanceof Error) {
@@ -218,7 +228,15 @@ export const articleController = {
         }
       });
 
-      return relatedArticles;
+      // Clean up content for each related article
+      return relatedArticles.map(article => ({
+        ...article,
+        content: article.content
+          .split('\n')
+          .map(line => line.trim())
+          .join('\n')
+          .trim()
+      }));
     } catch (error) {
       console.error('Error in getRelatedArticles:', error);
       throw error;
