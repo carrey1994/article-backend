@@ -1,6 +1,4 @@
 import { prisma } from '../utils/db';
-// Remove marked import since we're not using it anymore
-// import { marked } from 'marked';
 
 class NotFoundError extends Error {
   constructor(message: string) {
@@ -17,13 +15,26 @@ class ValidationError extends Error {
 }
 
 export const articleController = {
-  // Get all articles
-  getAllArticles: async ({ query }: { query: { page?: number, limit?: number } }) => {
+  // Get all articles with optional tag filtering
+  getAllArticles: async ({ query }: { query: { page?: number, limit?: number, tags?: string } }) => {
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
     const skip = (page - 1) * limit;
+    const tags = query.tags ? query.tags.split(',') : undefined;
+
+    // Build where clause based on tags
+    const where = tags ? {
+      tags: {
+        some: {
+          name: {
+            in: tags
+          }
+        }
+      }
+    } : {};
 
     const articles = await prisma.article.findMany({
+      where,
       skip,
       take: limit,
       include: {
@@ -37,7 +48,18 @@ export const articleController = {
       }
     });
 
-    const total = await prisma.article.count();
+    const total = await prisma.article.count({ where });
+
+    console.log({
+      debug: {
+        tags,
+        where,
+        total,
+        page,
+        limit,
+        articlesReturned: articles.length
+      }
+    });
 
     return {
       articles,

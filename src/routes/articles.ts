@@ -5,7 +5,8 @@ export const articleRoutes = new Elysia({ prefix: '/articles' })
   .get('/', articleController.getAllArticles, {
     query: t.Object({
       page: t.Optional(t.Number()),
-      limit: t.Optional(t.Number())
+      limit: t.Optional(t.Number()),
+      tags: t.Optional(t.String())
     })
   })
   .get('/id/:id', async ({ params, set }) => {
