@@ -1,6 +1,35 @@
 import { prisma } from '../utils/db';
 
 export const tagController = {
+  // Get tag list for topics on index with article counts and other metadata
+  getTagsForTopics: async () => {
+    const tags = await prisma.tag.findMany({
+      include: {
+        _count: {
+          select: { articles: true }
+        },
+        articles: {
+          select: {
+            createdAt: true
+          }
+        }
+      },
+      orderBy: {
+        articles: {
+          _count: 'desc'
+        }
+      }
+    });
+
+    return tags.map(tag => ({
+      name: tag.name,
+      articleCount: tag._count.articles,
+      lastActive: tag.articles.length > 0 
+        ? Math.max(...tag.articles.map(a => a.createdAt.getTime()))
+        : null
+    }));
+  },
+
   // Get all tags with article count
   getAllTags: async () => {
     const tags = await prisma.tag.findMany({
