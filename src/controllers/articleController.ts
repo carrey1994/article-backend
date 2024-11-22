@@ -22,7 +22,6 @@ export const articleController = {
     const skip = (page - 1) * limit;
     const tags = query.tags ? query.tags.split(',') : undefined;
 
-    // Build where clause based on tags
     const where = tags ? {
       tags: {
         some: {
@@ -49,17 +48,6 @@ export const articleController = {
     });
 
     const total = await prisma.article.count({ where });
-
-    console.log({
-      debug: {
-        tags,
-        where,
-        total,
-        page,
-        limit,
-        articlesReturned: articles.length
-      }
-    });
 
     return {
       articles,
@@ -99,17 +87,8 @@ export const articleController = {
         throw new Error('Article not found');
       }
 
-      // Clean up content by removing extra whitespace and indentation
-      const cleanContent = article.content
-        .split('\n')
-        .map(line => line.trim())
-        .join('\n')
-        .trim();
-
-      return {
-        ...article,
-        content: cleanContent
-      };
+      // Return the article with original content formatting
+      return article;
       
     } catch (error) {
       if (error instanceof Error) {
@@ -139,9 +118,6 @@ export const articleController = {
     if (!article) {
       throw new Error('Article not found');
     }
-
-    // Convert markdown to HTML if needed
-    article.content = marked(article.content);
     
     return article;
   },
@@ -250,15 +226,8 @@ export const articleController = {
         }
       });
 
-      // Clean up content for each related article
-      return relatedArticles.map(article => ({
-        ...article,
-        content: article.content
-          .split('\n')
-          .map(line => line.trim())
-          .join('\n')
-          .trim()
-      }));
+      // Return related articles with original content formatting
+      return relatedArticles;
     } catch (error) {
       console.error('Error in getRelatedArticles:', error);
       throw error;
