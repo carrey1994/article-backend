@@ -1,5 +1,5 @@
 import { prisma } from '../utils/db';
-import { marked } from 'marked';
+// import { marked } from 'marked';
 
 class NotFoundError extends Error {
   constructor(message: string) {
@@ -76,11 +76,8 @@ export const articleController = {
         throw new Error('Article not found');
       }
 
-      // Convert markdown to HTML
-      return {
-        ...article,
-        content: marked(article.content)
-      };
+      // Return the article directly without converting markdown to HTML
+      return article;
       
     } catch (error) {
       if (error instanceof Error) {
