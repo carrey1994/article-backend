@@ -100,94 +100,7 @@ export const articleController = {
       throw new Error('Failed to fetch article');
     }
   },
-
-  // Get single article by slug
-  getArticleBySlug: async ({ params: { slug } }: { params: { slug: string } }) => {
-    const article = await prisma.article.findUnique({
-      where: { slug },
-      include: {
-        tags: true,
-        comments: {
-          orderBy: {
-            createdAt: 'desc'
-          }
-        }
-      }
-    });
-
-    if (!article) {
-      throw new Error('Article not found');
-    }
-    
-    return article;
-  },
-
-  // Create new article
-  createArticle: async ({ body }: { body: any }) => {
-    const { title, content, tags = [], ...rest } = body;
-    
-    // Create URL-friendly slug from title
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9\s]/g, '')
-      .replace(/\s+/g, '-');
-
-    const article = await prisma.article.create({
-      data: {
-        title,
-        content,
-        slug,
-        ...rest,
-        tags: {
-          connectOrCreate: tags.map((tag: string) => ({
-            where: { name: tag },
-            create: { name: tag }
-          }))
-        }
-      },
-      include: {
-        tags: true
-      }
-    });
-
-    return article;
-  },
-
-  // Update article
-  updateArticle: async ({ params: { slug }, body }: { params: { slug: string }, body: any }) => {
-    const { tags, ...rest } = body;
-
-    const article = await prisma.article.update({
-      where: { slug },
-      data: {
-        ...rest,
-        ...(tags && {
-          tags: {
-            set: [],
-            connectOrCreate: tags.map((tag: string) => ({
-              where: { name: tag },
-              create: { name: tag }
-            }))
-          }
-        })
-      },
-      include: {
-        tags: true
-      }
-    });
-
-    return article;
-  },
-
-  // Delete article
-  deleteArticle: async ({ params: { slug } }: { params: { slug: string } }) => {
-    await prisma.article.delete({
-      where: { slug }
-    });
-
-    return { message: 'Article deleted successfully' };
-  },
-
+  
   // Get related articles by tags
   getRelatedArticles: async ({ params }: { params: { id: string } }) => {
     try {
@@ -232,7 +145,8 @@ export const articleController = {
       console.error('Error in getRelatedArticles:', error);
       throw error;
     }
-  }
+  },
+  
 };
 
 export { NotFoundError, ValidationError };

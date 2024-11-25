@@ -13,7 +13,6 @@ datasource db {
 model Article {
   id          Int       @id @default(autoincrement())
   title       String
-  slug        String    @unique
   content     String
   excerpt     String?
   coverImage  String?

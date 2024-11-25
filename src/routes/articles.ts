@@ -89,11 +89,6 @@ export const articleRoutes = new Elysia({ prefix: '/articles' })
       id: t.String()
     })
   })
-  .get('/:slug', articleController.getArticleBySlug, {
-    params: t.Object({
-      slug: t.String()
-    })
-  })
   .post('/', articleController.createArticle, {
     body: t.Object({
       title: t.String(),
@@ -102,23 +97,5 @@ export const articleRoutes = new Elysia({ prefix: '/articles' })
       coverImage: t.Optional(t.String()),
       published: t.Optional(t.Boolean()),
       tags: t.Optional(t.Array(t.String()))
-    })
-  })
-  .put('/:slug', articleController.updateArticle, {
-    params: t.Object({
-      slug: t.String()
-    }),
-    body: t.Object({
-      title: t.Optional(t.String()),
-      content: t.Optional(t.String()),
-      excerpt: t.Optional(t.String()),
-      coverImage: t.Optional(t.String()),
-      published: t.Optional(t.Boolean()),
-      tags: t.Optional(t.Array(t.String()))
-    })
-  })
-  .delete('/:slug', articleController.deleteArticle, {
-    params: t.Object({
-      slug: t.String()
     })
   });

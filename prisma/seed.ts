@@ -33,7 +33,6 @@ async function main() {
     await prisma.article.create({
       data: {
         title: mockArticle.title,
-        slug: mockArticle.slug,
         content: mockArticle.content,
         excerpt: mockArticle.excerpt,
         published: true,

@@ -42,7 +42,6 @@ export const schemas = {
   article: {
     id: "number",
     title: "string",
-    slug: "string",
     content: "string",
     createdAt: "string",
     updatedAt: "string"
