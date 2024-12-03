@@ -1,6 +1,12 @@
 version: '3.8'
 
 services:
+
+  nginx:
+    image: nginx
+    labels:
+      - dev.orbstack.domains=foo.local,bar.local
+
   # app:
   #   build: .
   #   ports:

@@ -11,16 +11,24 @@ datasource db {
 }
 
 model Article {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String
   content     String
   excerpt     String?
   coverImage  String?
-  published   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  published   Boolean     @default(false)
+  premium     Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  accessLevel AccessLevel @default(GUEST)
   tags        Tag[]
   comments    Comment[]
+}
+
+enum AccessLevel {
+  GUEST       // Accessible by everyone
+  MEMBER      // Accessible by registered users
+  PREMIUM     // Accessible by premium users only
 }
 
 model Tag {
